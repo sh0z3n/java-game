@@ -1,0 +1,79 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.2.2'
+    }
+}
+
+allprojects {
+    apply plugin: "eclipse"
+
+    version = '1.0'
+    ext {
+        appName = "AdventureQuestEngine"
+        gdxVersion = '1.12.1'
+        javaVersion = 17
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        google()
+        gradlePluginPortal()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "https://jitpack.io" }
+    }
+}
+
+project(":desktop") {
+    apply plugin: "java-library"
+    apply plugin: "application"
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = ['src']
+            }
+        }
+    }
+
+    dependencies {
+        implementation project(":core")
+        api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    }
+    
+    application {
+        mainClass = "com.adventurequest.DesktopLauncher"
+    }
+    
+    run {
+        workingDir = project.file("../assets")
+        standardInput = System.in
+    }
+}
+
+project(":core") {
+    apply plugin: "java-library"
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = ['src']
+            }
+        }
+    }
+
+    dependencies {
+        api "com.badlogicgames.gdx:gdx:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+    }
+}
